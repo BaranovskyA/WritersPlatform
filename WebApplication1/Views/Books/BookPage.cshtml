@@ -1,0 +1,124 @@
+﻿<link rel="stylesheet" href="~/Content/styles.css" />
+@model WebApplication1.Models.BookModel
+@using WebApplication1.Models;
+@using System.Web;
+@using System.Web.Mvc;
+@{
+    ViewBag.Title = Model.Title + " – ASP.NET";
+    CommentModel comm = new CommentModel();
+    comm.BooksId = Model.Id;
+    string userLoginCookie = "";
+    if (HttpContext.Current.Request.Cookies["authCookie"] != null) { userLoginCookie = HttpContext.Current.Request.Cookies["authCookie"].Value; }
+}
+
+<style>
+    .img-book{
+        width:16.6666%;
+        float:left;
+    }
+
+    .img-book img{
+        margin-top:30px;
+        margin-left:10px;
+    }
+
+    .book-content{
+        width:80%;
+    }
+
+    #book-title{
+        margin:0 auto;
+        text-align:center;
+    }
+
+    #book-text{
+        margin-left:20px;
+        margin-top:10px;
+    }
+</style>
+
+<script>
+    function Func() {
+        console.log("Func function");
+        console.log($('#rating').val());
+        $.ajax({
+            type: "GET",
+            url: "@(Url.Action("AddRating", "Books"))",
+            data: { id: 1, rating: $('#rating').val() },
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        async: true,
+        success: function (result) {
+            //do something
+        }
+    });
+    }
+</script>
+
+<div>
+    <div class="books" style="margin-top:20px;">
+        <div style="padding:10px; background-color:#141111!important">
+            <div class="img-book">
+                @Html.Raw("<img src=\"http://book-online.com.ua/images/book_img/noimage.gif" + "\" />")
+            </div>
+            <div class="book-content">
+                <h4 id="book-title">@Model.Title</h4>
+                <p><b>Автор:</b> @Html.DisplayFor(modelItem => Model.AuthorName)</p>
+                <p><b>Жанр:</b> @Html.DisplayFor(modelItem => Model.GenreName)</p>
+                <p><b>Рейтинг:</b> @Html.DisplayFor(modelItem => Model.Rating)</p>
+                <p><b>Дата публикации:</b> @Html.DisplayFor(modelItem => Model.DatePublishing)</p>
+                <p id="book-text"><b>Текст:</b><br /> @Html.DisplayFor(modelItem => Model.Text)</p>
+            </div>
+        </div>
+    </div>
+
+    @if (userLoginCookie != "")
+    {
+        <div class="books" style="margin-top:30px; padding:20px;background-color:#141111!important">
+            <h4>Поставьте рейтинг данной книге.</h4>
+            <div class="form-group">
+                @Html.Label("Рейтинг (от 1 до 100)")
+                <div class="col-md-10">
+                    @Html.Editor("Rating", new { id = "rating" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-success" role="button" onclick="Func()">Save</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (userLoginCookie != "")
+    {
+        <div class="books" style="margin-top:30px; padding:20px;background-color:#141111!important">
+            <h4>Добавьте новый комментарий прямо сейчас!</h4>
+            @using (Ajax.BeginForm("EditAndCreate", "Comment", comm, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "content-book" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.Id)
+                    <div class="form-group">
+                        @Html.Label("Comment's text")
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Text, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-success" role="button">Save</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <div id="content-comments">
+        @Html.Partial("ViewComments")
+    </div>
+</div>

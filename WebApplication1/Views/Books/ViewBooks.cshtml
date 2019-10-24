@@ -1,0 +1,44 @@
+﻿<link rel="stylesheet" href="~/Content/styles.css" />
+@model IEnumerable<WebApplication1.Models.BookModel>
+
+<style>
+    .img-book{
+        width:16.6666%;
+        float:left;
+    }
+
+    .img-book img{
+        margin-top:30px;
+        margin-left:10px;
+    }
+
+    .book-content{
+        width:80%;
+    }
+
+    #book-title{
+        margin:0 auto;
+        text-align:center;
+    }
+</style>
+
+<div>
+    @foreach (var item in Model)
+    {
+            <div class="books" style="margin-top:20px;">
+                <div style="padding:10px; background-color:#141111!important">
+                    <div class="img-book">
+                        @Html.Raw("<img src=\"http://book-online.com.ua/images/book_img/noimage.gif" + "\" />")
+                    </div>
+                    <div class="book-content">
+                        <h4 id="book-title">@Ajax.ActionLink(item.Title, "BookPage", new { id = item.Id }, new AjaxOptions { UpdateTargetId = "results" }, new { target = "_blank" }) - @Html.DisplayFor(modelItem => item.AuthorName)</h4>
+                        <p><b>Жанр:</b> @Html.DisplayFor(modelItem => item.GenreName)</p>
+                        <p><b>Рейтинг:</b> @Html.DisplayFor(modelItem => item.Rating)</p>
+                        <p><b>Дата публикации:</b> @Html.DisplayFor(modelItem => item.DatePublishing)</p>
+                        <p><b>Текст:</b><br /> @Html.DisplayFor(modelItem => item.Text)</p>
+                    </div>
+                </div>
+            </div>
+     }
+</div>
+

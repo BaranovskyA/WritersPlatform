@@ -1,0 +1,51 @@
+﻿@model IEnumerable<WebApplication1.Models.GenreModel>
+
+@{
+    ViewBag.Title = "Жанры – ASP.NET";
+    string userLoginCookie = "";
+    if (HttpContext.Current.Request.Cookies["authCookie"] != null) { userLoginCookie = HttpContext.Current.Request.Cookies["authCookie"].Value; }
+}
+    <style>
+        .addbutton{
+            text-decoration:none;
+            margin-right:30px; 
+            margin-bottom:10px;
+            background-color:rgba(232, 82, 5, 1)!important;
+        }
+
+        .innerp a{
+            background-color:rgba(232, 82, 5, 1)!important;
+            font-size:24px;
+            text-transform:uppercase;
+            font-family: 'Raleway', sans-serif;
+            font-weight:bold;
+            white-space:nowrap;
+        }
+    </style>
+<p class="innerp" style="display:flex;justify-content:center; align-content:center;align-items:center; margin-top:20px; background-color:rgba(232, 82, 5, 1)!important; width: 250px; padding:15px; margin: 0 auto; margin-top:10px; margin-bottom:20px;">
+    @Html.ActionLink("Добавить жанр", "EditAndCreate", new { @class = "addbutton" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Genre")
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.GenreName)
+    </td>
+    @if (userLoginCookie == "admin")
+    {
+        <td>
+            @Html.ActionLink("Edit", "EditAndCreate", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+        </td>
+    }
+</tr>
+}
+
+</table>

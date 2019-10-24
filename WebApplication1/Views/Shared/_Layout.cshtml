@@ -1,0 +1,91 @@
+﻿@using System.Web;
+@using System.Web.Mvc;
+@{ 
+    string userLoginCookie = "";
+    if (HttpContext.Current.Request.Cookies["authCookie"] != null) { userLoginCookie = HttpContext.Current.Request.Cookies["authCookie"].Value; }
+}
+<link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+<style>
+    *{
+        font-family: 'Raleway', sans-serif;
+        color: #fff;
+    }
+    a {
+    display: inline-block;
+    color:#ffeb3b;
+    line-height: 1;
+    text-decoration:none;
+    cursor: pointer;
+    color:#fff!important;
+    }
+    a:after {
+        background-color: rgba(235, 192, 17, 1)!important;
+        display: block;
+        content: "";
+        height: 2px;
+        width: 0%;
+        transition: width .3s ease-in-out;
+    }
+    a:hover:after,
+    a:focus:after {
+        width: 100%;
+    }
+    a:hover{
+        color:rgba(235, 192, 17, 1)!important;
+    }
+    body{
+        /*background-image:url(http://goodoboi.ru/images/foto/original/20130714130742234.jpg);*/
+        background-image:url(https://image.freepik.com/free-vector/3d_79145-248.jpg);
+        background-repeat:repeat-y repeat-x;
+  
+    }
+</style>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WritersPlatform – ASP.NET</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="border-bottom:1px solid #e7bb17;background-image: url(https://image.freepik.com/free-vector/_79145-321.jpg); background-repeat:repeat-x repeat-y;">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto" style="margin-left:20%;">
+                <li class="nav-item">@Html.ActionLink("Жанры", "Index", "Genre", null, new { @class = "nav-link" })</li>
+                <li class="nav-item">@Html.ActionLink("Книги", "Index", "Books", null, new { @class = "nav-link" })</li>
+                @if (userLoginCookie != "")
+                {
+                    <li class="nav-item">@Html.ActionLink("Личный кабинет", "Index", "Users", null, new { @class = "nav-link" })</li>
+                }
+                @if (userLoginCookie == "admin")
+                {
+                    <li class="nav-item">@Html.ActionLink("Логи", "Index", "Log", null, new { @class = "nav-link" })</li>
+                }
+                @if (userLoginCookie == "")
+                {
+                    <li class="nav-item" style="white-space:nowrap;">@Html.ActionLink("Зарегистрироваться", "CreateOrEdit", "Users", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Авторизироваться", "Authorization", "Users", null, new { @class = "nav-link" })</li>
+                }
+                else
+                {
+                    <li class="nav-item" style="white-space:nowrap;">@Html.ActionLink($"Здраствуйте, {userLoginCookie}!", "Index", "Users", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Выход", "Exit", "Users", null, new { @class = "nav-link" })</li>
+                }
+            </ul>
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>

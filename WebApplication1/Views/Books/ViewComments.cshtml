@@ -1,0 +1,19 @@
+﻿<link rel="stylesheet" href="~/Content/styles.css" />
+@using System.Web;
+@using System.Web.Mvc;
+@{ 
+    string userLoginCookie = "";
+    if (HttpContext.Current.Request.Cookies["authCookie"] != null) { userLoginCookie = HttpContext.Current.Request.Cookies["authCookie"].Value; }
+}
+<div class="comments">
+    @foreach (var item in ViewBag.comments)
+    {
+        <div class="books" style="padding:20px;margin-top:20px;background-color:#141111!important">
+            <div>
+                <h4>Комментарий</h4>
+                <p>@userLoginCookie</p>
+                <p>@item.Text</p>
+            </div>
+        </div>
+    }
+</div>
